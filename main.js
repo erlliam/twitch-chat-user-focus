@@ -69,6 +69,10 @@ function injectStyleSheet() {
   let styleSheet = document.createElement("style");
   styleSheet.id = "tcufStyleSheet";
   styleSheet.textContent = `
+    .tcuf-hidden {
+      display: none;
+    }
+
     .tcuf-unfocus-container {
       display: flex;
     }
@@ -122,7 +126,7 @@ function onlyShowMessagesByUser(username) {
 function showAllMessages() {
   let children = chatLogElement.children;
   for (let message of children) {
-    message.style.display = "block";
+    message.classList.remove("tcuf-hidden");
   }
 
   returnToPreviousScrollTop();
@@ -136,7 +140,7 @@ function hideMessageIfUsernameMismatch(message, username) {
   }
   let messageUsername = getUsernameFromChatMessageUsername(chatMessageUsernameElement);
   if (messageUsername !== username) {
-    message.style.display = "none";
+    message.classList.add("tcuf-hidden");
   }
 }
 
