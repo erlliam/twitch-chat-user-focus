@@ -5,8 +5,9 @@ class CurrentlyFocusedElement {
   }
 
   _init() {
+    this._element.classList.add("tcuf-unfocus-container");
     this._element.innerHTML = `
-      <button class="tcuf-unfocus-button">Unfocus</button>
+      <button>Unfocus</button>
     `;
 
     this._element.addEventListener("click", this._handleClick.bind(this));
@@ -68,6 +69,15 @@ function injectStyleSheet() {
   let styleSheet = document.createElement("style");
   styleSheet.id = "tcufStyleSheet";
   styleSheet.textContent = `
+    .tcuf-unfocus-container {
+      display: flex;
+    }
+
+    .tcuf-unfocus-container > button {
+      border: 1px solid;
+      border-radius: 8px;
+      padding: 0rem 1rem;
+    }
   `;
   document.head.append(styleSheet);
 }
