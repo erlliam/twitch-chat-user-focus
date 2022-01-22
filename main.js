@@ -1,4 +1,4 @@
-class CurrentlyFocusedElement {
+class UnfocusButton {
   constructor() {
     this._element = document.createElement("div");
     this._init();
@@ -15,7 +15,6 @@ class CurrentlyFocusedElement {
 
   _handleClick() {
     this._hide();
-    showAllMessages();
   }
 
   _hide() {
@@ -36,8 +35,8 @@ let currentFocusUsername = null;
 
 let chatLogElement = document.querySelector('[role="log"]');
 let chatInputButtonsContainerElement = document.querySelector(".hfeqK");
-let currentlyFocusedElement = new CurrentlyFocusedElement();
-currentlyFocusedElement.addClickEventListener(showAllMessages);
+let unfocusButton = new UnfocusButton();
+unfocusButton.addClickEventListener(showAllMessages);
 
 function main() {
   setUpChatLogChildObeserver();
@@ -104,7 +103,7 @@ function handleDoubleClick(event) {
     setChatScrollTop();
     currentFocusUsername = username;
     onlyShowMessagesByUser(username);
-    currentlyFocusedElement.show();
+    unfocusButton.show();
   }
 }
 
