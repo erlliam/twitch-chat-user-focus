@@ -6,25 +6,27 @@ let chatInputButtonsContainerElement = document.querySelector(".hfeqK");
 let currentlyFocusedElement = document.createElement("div");
 
 function main() {
+  setUpChatLogChildObeserver();
+
   cleanUpExistingStyleSheet();
   injectStyleSheet();
 
+  currentlyFocusedElement.innerHTML = "<button>Unfocus</button>";
+  currentlyFocusedElement.querySelector("button").addEventListener("click", handleUnfocusClick);
+  document.body.addEventListener("dblclick", handleDoubleClick);
+}
+
+function setUpChatLogChildObeserver() {
   let  observer = new MutationObserver((mutationsList, observer) => {
     for (let mutation of mutationsList) {
       if (mutation.type === "childList") {
         for (let node of mutation.addedNodes) {
-          if (currentFocusUsername) {
-            hideMessageIfUsernameMismatch(node, currentFocusUsername);
-          }
+          handleNewChatLogElement(node);
         }
       }
     }
   });
   observer.observe(chatLogElement, { childList: true });
-
-  currentlyFocusedElement.innerHTML = "<button>Unfocus</button>";
-  currentlyFocusedElement.querySelector("button").addEventListener("click", handleUnfocusClick);
-  document.body.addEventListener("dblclick", handleDoubleClick);
 }
 
 function cleanUpExistingStyleSheet() {
@@ -37,6 +39,12 @@ function injectStyleSheet() {
   styleSheet.textContent = `
   `;
   document.head.append(styleSheet);
+}
+
+function handleNewChatLogElement(element) {
+  if (currentFocusUsername) {
+    hideMessageIfUsernameMismatch(element, currentFocusUsername);
+  }
 }
 
 function handleDoubleClick(event) {
@@ -66,7 +74,6 @@ function handleUnfocusClick(event) {
   returnToPreviousScrollTop();
   currentFocusUsername = null;
 }
-
 
 function setChatScrollTop() {
   previousScrollTop = document.querySelector(".iqhsCy > div:nth-child(2) > div:nth-child(3)").scrollTop;
