@@ -1,9 +1,42 @@
+class CurrentlyFocusedElement {
+  constructor() {
+    this._element = document.createElement("div");
+    this._init();
+  }
+
+  _init() {
+    this._element.innerHTML = `
+      <button class="tcuf-unfocus-button">Unfocus</button>
+    `;
+
+    this._element.addEventListener("click", this._handleClick.bind(this));
+  }
+
+  _handleClick() {
+    this._hide();
+    showAllMessages();
+  }
+
+  _hide() {
+    this._element.remove();
+  }
+
+  addClickEventListener(callback) {
+    this._element.addEventListener("click", callback);
+  }
+
+  show() {
+    chatInputButtonsContainerElement.insertBefore(this._element, chatInputButtonsContainerElement.lastChild);
+  }
+}
+
 let previousScrollTop = 0;
 let currentFocusUsername = null;
 
 let chatLogElement = document.querySelector('[role="log"]');
 let chatInputButtonsContainerElement = document.querySelector(".hfeqK");
-let currentlyFocusedElement = document.createElement("div");
+let currentlyFocusedElement = new CurrentlyFocusedElement();
+currentlyFocusedElement.addClickEventListener(showAllMessages);
 
 function main() {
   setUpChatLogChildObeserver();
@@ -11,8 +44,6 @@ function main() {
   cleanUpExistingStyleSheet();
   injectStyleSheet();
 
-  currentlyFocusedElement.innerHTML = "<button>Unfocus</button>";
-  currentlyFocusedElement.querySelector("button").addEventListener("click", handleUnfocusClick);
   document.body.addEventListener("dblclick", handleDoubleClick);
 }
 
@@ -59,20 +90,8 @@ function handleDoubleClick(event) {
     setChatScrollTop();
     currentFocusUsername = username;
     onlyShowMessagesByUser(username);
-    insertFocusTextAndButton(username);
+    currentlyFocusedElement.show();
   }
-}
-
-function handleUnfocusClick(event) {
-  currentlyFocusedElement.remove();
-
-  let children = chatLogElement.children;
-  for (let message of children) {
-    message.style.display = "block";
-  }
-
-  returnToPreviousScrollTop();
-  currentFocusUsername = null;
 }
 
 function setChatScrollTop() {
@@ -83,15 +102,21 @@ function returnToPreviousScrollTop() {
   document.querySelector(".iqhsCy > div:nth-child(2) > div:nth-child(3)").scrollTop = previousScrollTop;
 }
 
-function insertFocusTextAndButton(username) {
-  chatInputButtonsContainerElement.insertBefore(currentlyFocusedElement, chatInputButtonsContainerElement.lastChild);
-}
-
 function onlyShowMessagesByUser(username) {
   let children = chatLogElement.children;
   for (let message of children) {
     hideMessageIfUsernameMismatch(message, username);
   }
+}
+
+function showAllMessages() {
+  let children = chatLogElement.children;
+  for (let message of children) {
+    message.style.display = "block";
+  }
+
+  returnToPreviousScrollTop();
+  currentFocusUsername = null;
 }
 
 function hideMessageIfUsernameMismatch(message, username) {
