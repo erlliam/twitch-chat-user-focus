@@ -6,6 +6,9 @@ let chatInputButtonsContainerElement = document.querySelector(".hfeqK");
 let currentlyFocusedElement = document.createElement("div");
 
 function main() {
+  cleanUpExistingStyleSheet();
+  injectStyleSheet();
+
   let  observer = new MutationObserver((mutationsList, observer) => {
     for (let mutation of mutationsList) {
       if (mutation.type === "childList") {
@@ -22,6 +25,18 @@ function main() {
   currentlyFocusedElement.innerHTML = "<button>Unfocus</button>";
   currentlyFocusedElement.querySelector("button").addEventListener("click", handleUnfocusClick);
   document.body.addEventListener("dblclick", handleDoubleClick);
+}
+
+function cleanUpExistingStyleSheet() {
+  document.getElementById("tcufStyleSheet")?.remove();
+}
+
+function injectStyleSheet() {
+  let styleSheet = document.createElement("style");
+  styleSheet.id = "tcufStyleSheet";
+  styleSheet.textContent = `
+  `;
+  document.head.append(styleSheet);
 }
 
 function handleDoubleClick(event) {
